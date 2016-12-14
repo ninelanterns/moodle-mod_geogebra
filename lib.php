@@ -753,16 +753,8 @@ function geogebra_reset_userdata($data) {
 
     if (!empty($data->reset_geogebra_deleteallsessions)) {
         $params = array('courseid' => $data->courseid);
-        $select = 'session_id IN'
-            . " (SELECT s.session_id FROM {geogebra_sessions} s"
-            . " INNER JOIN {geogebra} j ON s.geogebraid = j.id"
-            . " WHERE j.course = :courseid)";
-        $DB->delete_records_select('geogebra_activities', $select, $params);
-
-        $select = 'geogebraid IN'
-            . " (SELECT j.id FROM {geogebra} j"
-            . " WHERE j.course = :courseid)";
-        $DB->delete_records_select('geogebra_sessions', $select, $params);
+        $select = "geogebra IN (SELECT id FROM {geogebra} WHERE course=:courseid)";
+        $DB->delete_records_select('geogebra_attempts', $select, $params);
 
         // remove all grades from gradebook
         if (empty($data->reset_gradebook_grades)) {
