@@ -739,9 +739,10 @@ function geogebra_reset_userdata($data) {
     $componentstr = get_string('modulenameplural', 'geogebra');
     $status = array();
 
-    if (!empty($data->reset_geogebra_deleteallattempts)) {
-        $select = 'geogebra IN (SELECT j.id FROM {geogebra} j WHERE j.course = :courseid)';
-        $DB->delete_records_select('geogebra_attempts', $select, array('courseid' => $data->courseid));
+    if (!empty($data->reset_geogebra_deleteallsessions)) {
+        $params = array('courseid' => $data->courseid);
+        $select = "geogebra IN (SELECT id FROM {geogebra} WHERE course=:courseid)";
+        $DB->delete_records_select('geogebra_attempts', $select, $params);
 
         // remove all grades from gradebook
         if (empty($data->reset_gradebook_grades)) {
